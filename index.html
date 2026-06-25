@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TS SOVEREIGN — Luxury Hydration</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dim: #7A5E28;
+    --black: #080705;
+    --near-black: #0E0C09;
+    --smoke: #1A1610;
+    --text: #D4C4A0;
+    --text-dim: #7A6E58;
+    --white: #F8F2E6;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 60px;
+    mix-blend-mode: normal;
+    transition: background 0.4s, padding 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(8,7,5,0.92);
+    backdrop-filter: blur(12px);
+    padding: 18px 60px;
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .nav-logo span { color: var(--white); }
+  .nav-links {
+    display: flex;
+    gap: 44px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 10px 24px;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+  }
+  .nav-cta:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  /* ─── HERO / SCROLL ANIMATION ─── */
+  #hero-scroll-container {
+    position: relative;
+    height: 600vh; /* tall scroll space */
+  }
+
+  #hero-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #hero-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(8,7,5,0.0) 0%,
+      rgba(8,7,5,0.0) 60%,
+      rgba(8,7,5,0.85) 100%
+    );
+    pointer-events: none;
+  }
+
+  .hero-top-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 180px;
+    background: linear-gradient(to bottom, rgba(8,7,5,0.6) 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .hero-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0 60px 80px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 8vw, 110px);
+    font-weight: 300;
+    line-height: 0.9;
+    color: var(--white);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .hero-title.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-right {
+    text-align: right;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+  }
+  .hero-right.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .hero-tagline {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .hero-desc {
+    font-size: 13px;
+    font-weight: 200;
+    line-height: 1.8;
+    color: var(--text-dim);
+    max-width: 280px;
+    margin-left: auto;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    opacity: 1;
+    transition: opacity 0.4s;
+  }
+  .scroll-hint.hidden { opacity: 0; }
+  .scroll-hint span {
+    font-size: 9px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .scroll-hint-line {
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: pulse-line 2s ease-in-out infinite;
+  }
+  @keyframes pulse-line {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.7); transform-origin: top; }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+
+  /* ─── LOADING ─── */
+  #loader {
+    position: fixed;
+    inset: 0;
+    background: var(--black);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    transition: opacity 0.6s ease;
+  }
+  #loader.done { opacity: 0; pointer-events: none; }
+  .loader-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+  }
+  .loader-bar-wrap {
+    width: 200px;
+    height: 1px;
+    background: rgba(201,168,76,0.15);
+  }
+  .loader-bar {
+    height: 100%;
+    background: var(--gold);
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+  .loader-pct {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--text-dim);
+  }
+
+  /* ─── SECTIONS ─── */
+  section {
+    padding: 140px 60px;
+  }
+
+  /* CRAFT */
+  #craft {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+  .craft-label {
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+  .craft-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 4vw, 60px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 32px;
+  }
+  .craft-heading em { font-style: italic; color: var(--gold); }
+  .craft-body {
+    font-size: 14px;
+    line-height: 2;
+    color: var(--text-dim);
+    margin-bottom: 48px;
+    max-width: 440px;
+  }
+  .cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold-dim);
+    padding-bottom: 6px;
+    transition: gap 0.3s, border-color 0.3s;
+  }
+  .cta-link:hover { gap: 24px; border-color: var(--gold); }
+  .cta-link::after { content: '→'; }
+
+  .craft-stats {
+    display: flex;
+    gap: 48px;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    padding-top: 48px;
+    margin-top: 48px;
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .craft-image-block {
+    position: relative;
+  }
+  .craft-image-block img {
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    display: block;
+  }
+  .craft-image-caption {
+    position: absolute;
+    bottom: 24px;
+    right: -20px;
+    background: rgba(8,7,5,0.9);
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 20px 24px;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    max-width: 200px;
+    line-height: 1.7;
+  }
+
+  /* COLLECTION */
+  #collection {
+    background: var(--near-black);
+    border-top: 1px solid rgba(201,168,76,0.1);
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+  }
+  .section-header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+  .section-header .craft-label { display: block; margin-bottom: 16px; }
+  .section-header .craft-heading { margin-bottom: 0; }
+
+  .collection-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .collection-item {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--smoke);
+  }
+  .collection-item img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease;
+    filter: brightness(0.8);
+  }
+  .collection-item:hover img {
+    transform: scale(1.04);
+    filter: brightness(1);
+  }
+  .collection-item-info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 32px 24px 24px;
+    background: linear-gradient(to top, rgba(8,7,5,0.95) 0%, transparent 100%);
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+  }
+  .collection-item:hover .collection-item-info {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .collection-item-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .collection-item-price {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+  }
+
+  /* MATERIALS */
+  #materials {
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+  .materials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px;
+    margin-top: 80px;
+  }
+  .material-card {
+    border-top: 1px solid rgba(201,168,76,0.2);
+    padding-top: 32px;
+  }
+  .material-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    color: var(--gold-dim);
+    margin-bottom: 20px;
+    letter-spacing: 0.1em;
+  }
+  .material-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--white);
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .material-desc {
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--text-dim);
+  }
+
+  /* MARQUEE */
+  .marquee-section {
+    overflow: hidden;
+    border-top: 1px solid rgba(201,168,76,0.1);
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    padding: 28px 0;
+    background: var(--near-black);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 80px;
+    animation: marquee 25s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--gold-dim);
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+  }
+  .marquee-dot {
+    color: var(--gold);
+    font-style: normal;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* TESTIMONIAL */
+  #testimonial {
+    text-align: center;
+    padding: 160px 60px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .testimonial-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(26px, 3.5vw, 46px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--white);
+    margin-bottom: 40px;
+  }
+  .testimonial-author {
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .testimonial-stars {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 32px;
+  }
+  .star {
+    width: 14px;
+    height: 14px;
+    color: var(--gold);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--near-black);
+    border-top: 1px solid rgba(201,168,76,0.1);
+    padding: 80px 60px 48px;
+  }
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding-bottom: 60px;
+    border-bottom: 1px solid rgba(201,168,76,0.08);
+  }
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .footer-brand-desc {
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--text-dim);
+    max-width: 280px;
+  }
+  .footer-col-title {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+  .footer-col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .footer-col ul a {
+    font-size: 13px;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .footer-col ul a:hover { color: var(--text); }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 40px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+  .footer-copy {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.15s; }
+  .reveal-delay-2 { transition-delay: 0.3s; }
+  .reveal-delay-3 { transition-delay: 0.45s; }
+
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    nav.scrolled { padding: 14px 24px; }
+    .nav-links { display: none; }
+    #craft { grid-template-columns: 1fr; gap: 60px; }
+    .collection-grid { grid-template-columns: repeat(2, 1fr); }
+    .materials-grid { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    section { padding: 80px 24px; }
+    .hero-text { padding: 0 24px 60px; flex-direction: column; gap: 24px; align-items: flex-start; }
+    .hero-right { text-align: left; }
+    .hero-right .hero-desc { margin-left: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track { animation: none; }
+    .scroll-hint-line { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">TS</div>
+  <div class="loader-bar-wrap">
+    <div class="loader-bar" id="loader-bar"></div>
+  </div>
+  <div class="loader-pct" id="loader-pct">0%</div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">TS <span>Sovereign</span></div>
+  <ul class="nav-links">
+    <li><a href="#craft">Craftsmanship</a></li>
+    <li><a href="#collection">Collection</a></li>
+    <li><a href="#materials">Materials</a></li>
+  </ul>
+  <a href="#collection" class="nav-cta">Shop Now</a>
+</nav>
+
+<!-- HERO SCROLL SECTION -->
+<div id="hero-scroll-container">
+  <div id="hero-sticky">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-top-overlay"></div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-text">
+      <div class="hero-title" id="hero-title">
+        Born to<br><em>Reign.</em>
+      </div>
+      <div class="hero-right" id="hero-right">
+        <div class="hero-tagline">TS Sovereign Collection</div>
+        <p class="hero-desc">Forged from aircraft-grade aluminium. Sealed with gold-plated precision. Four colours. One standard.</p>
+      </div>
+    </div>
+
+    <div class="scroll-hint" id="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-hint-line"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track" id="marquee-track">
+    <span class="marquee-item">Obsidian Black <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Midnight Navy <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Forest Green <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Crimson Reserve <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Obsidian Black <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Midnight Navy <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Forest Green <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Crimson Reserve <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Obsidian Black <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Midnight Navy <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Forest Green <span class="marquee-dot">◆</span></span>
+    <span class="marquee-item">Crimson Reserve <span class="marquee-dot">◆</span></span>
+  </div>
+</div>
+
+<!-- CRAFT -->
+<section>
+  <div id="craft">
+    <div>
+      <p class="craft-label reveal">The Art of Sovereignty</p>
+      <h2 class="craft-heading reveal reveal-delay-1">
+        Where <em>precision</em><br>meets purpose.
+      </h2>
+      <p class="craft-body reveal reveal-delay-2">
+        The TS Sovereign is not a water bottle. It is a declaration. Machined from 18/8 aircraft-grade aluminium, finished with a satin matte coat that drinks in light — and sealed with a proprietary gold-anodised locking cap engineered to hold pressure at altitude.
+      </p>
+      <a href="#collection" class="cta-link reveal reveal-delay-3">Explore the Collection</a>
+
+      <div class="craft-stats reveal">
+        <div>
+          <div class="stat-num">500<small style="font-size:24px">ml</small></div>
+          <div class="stat-label">Capacity</div>
+        </div>
+        <div>
+          <div class="stat-num">24h</div>
+          <div class="stat-label">Cold Retention</div>
+        </div>
+        <div>
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Refills</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="craft-image-block reveal reveal-delay-1">
+      <img src="frames/f030.jpg" alt="TS Sovereign bottle in dramatic light" />
+      <div class="craft-image-caption">
+        Hand-inspected at our facility before every shipment.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COLLECTION -->
+<section id="collection">
+  <div class="section-header reveal">
+    <span class="craft-label">Four Expressions</span>
+    <h2 class="craft-heading">The <em>Sovereign</em> Collection</h2>
+  </div>
+
+  <div class="collection-grid">
+    <div class="collection-item reveal">
+      <img src="frames/f000.jpg" alt="Obsidian Black" />
+      <div class="collection-item-info">
+        <div class="collection-item-name">Obsidian Black</div>
+        <div class="collection-item-price">£ 129</div>
+      </div>
+    </div>
+    <div class="collection-item reveal reveal-delay-1">
+      <img src="frames/f120.jpg" alt="Collection" />
+      <div class="collection-item-info">
+        <div class="collection-item-name">Midnight Navy</div>
+        <div class="collection-item-price">£ 129</div>
+      </div>
+    </div>
+    <div class="collection-item reveal reveal-delay-2">
+      <img src="frames/f090.jpg" alt="Collection Group" />
+      <div class="collection-item-info">
+        <div class="collection-item-name">Forest Green</div>
+        <div class="collection-item-price">£ 129</div>
+      </div>
+    </div>
+    <div class="collection-item reveal reveal-delay-3">
+      <img src="frames/f239.jpg" alt="Crimson Reserve" />
+      <div class="collection-item-info">
+        <div class="collection-item-name">Crimson Reserve</div>
+        <div class="collection-item-price">£ 129</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MATERIALS -->
+<section>
+  <div id="materials">
+    <div class="section-header reveal">
+      <span class="craft-label">Engineering</span>
+      <h2 class="craft-heading">Built without<br><em>compromise.</em></h2>
+    </div>
+
+    <div class="materials-grid">
+      <div class="material-card reveal">
+        <div class="material-num">I</div>
+        <div class="material-name">Aircraft Aluminium</div>
+        <p class="material-desc">18/8 grade alloy used in aerospace applications. Lightweight, corrosion-resistant, and structurally irreducible.</p>
+      </div>
+      <div class="material-card reveal reveal-delay-1">
+        <div class="material-num">II</div>
+        <div class="material-name">Gold-Anodised Cap</div>
+        <p class="material-desc">The locking crown cap is PVD gold-coated for permanence — no flaking, no fading, no compromise. Pressure-tested at 3 atmospheres.</p>
+      </div>
+      <div class="material-card reveal reveal-delay-2">
+        <div class="material-num">III</div>
+        <div class="material-name">Satin Matte Finish</div>
+        <p class="material-desc">A proprietary electrostatic coating bonded at 200°C. Matte to the eye, silk to the touch. Food-safe, BPA-free, and impervious to oils.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section>
+  <div id="testimonial">
+    <div class="testimonial-stars reveal">
+      <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    </div>
+    <p class="testimonial-quote reveal">
+      "I've owned every premium hydration vessel on the market. Nothing comes close to the presence of a Sovereign in your hand — or the statement it makes when you set it down."
+    </p>
+    <div class="testimonial-author reveal reveal-delay-1">— Oliver Hargreaves, Verified Customer</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">TS SOVEREIGN</div>
+      <p class="footer-brand-desc">Luxury hydration for those who hold themselves to a higher standard. Engineered in Britain. Admired everywhere.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Shop</div>
+      <ul>
+        <li><a href="#">Obsidian Black</a></li>
+        <li><a href="#">Midnight Navy</a></li>
+        <li><a href="#">Forest Green</a></li>
+        <li><a href="#">Crimson Reserve</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">About</div>
+      <ul>
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">Materials</a></li>
+        <li><a href="#">Sustainability</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Support</div>
+      <ul>
+        <li><a href="#">Shipping</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">Care Guide</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 TS Sovereign. All rights reserved.</div>
+    <div class="footer-copy">Crafted with purpose.</div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  // ─── FRAME SEQUENCE CONFIG ───
+  const TOTAL_FRAMES = 240;
+  const frames = [];
+  let loadedCount = 0;
+  let canvasReady = false;
+
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  const loaderEl = document.getElementById('loader');
+  const loaderBar = document.getElementById('loader-bar');
+  const loaderPct = document.getElementById('loader-pct');
+
+  // Resize canvas to fill viewport
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    if (canvasReady && frames[currentFrameIdx]) {
+      drawFrame(currentFrameIdx);
+    }
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  // Draw a specific frame, cover-fitting it to the canvas
+  let currentFrameIdx = 0;
+  function drawFrame(idx) {
+    const img = frames[idx];
+    if (!img) return;
+    const cw = canvas.width, ch = canvas.height;
+    const iw = img.naturalWidth, ih = img.naturalHeight;
+    const scale = Math.max(cw / iw, ch / ih);
+    const sw = iw * scale, sh = ih * scale;
+    const sx = (cw - sw) / 2, sy = (ch - sh) / 2;
+    ctx.clearRect(0, 0, cw, ch);
+    ctx.drawImage(img, sx, sy, sw, sh);
+    currentFrameIdx = idx;
+  }
+
+  // Load all frames
+  function loadFrames() {
+    for (let i = 0; i < TOTAL_FRAMES; i++) {
+      const img = new Image();
+      const num = String(i).padStart(3, '0');
+      img.src = `frames/f${num}.jpg`;
+      img.onload = () => {
+        loadedCount++;
+        const pct = Math.round((loadedCount / TOTAL_FRAMES) * 100);
+        loaderBar.style.width = pct + '%';
+        loaderPct.textContent = pct + '%';
+        if (loadedCount === TOTAL_FRAMES) {
+          onAllLoaded();
+        } else if (loadedCount === 1) {
+          // Show first frame as soon as it's ready
+          drawFrame(0);
+        }
+      };
+      frames[i] = img;
+    }
+  }
+
+  function onAllLoaded() {
+    canvasReady = true;
+    drawFrame(0);
+    setTimeout(() => {
+      loaderEl.classList.add('done');
+      setTimeout(() => { loaderEl.style.display = 'none'; }, 700);
+      // Trigger hero text
+      document.getElementById('hero-title').classList.add('visible');
+      document.getElementById('hero-right').classList.add('visible');
+    }, 300);
+  }
+
+  loadFrames();
+
+  // ─── SCROLL ANIMATION ───
+  const scrollContainer = document.getElementById('hero-scroll-container');
+  const scrollHint = document.getElementById('scroll-hint');
+  let ticking = false;
+  let targetFrame = 0;
+  let displayFrame = 0;
+  let rafId;
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function animateFrame() {
+    if (Math.abs(displayFrame - targetFrame) > 0.1) {
+      displayFrame = lerp(displayFrame, targetFrame, 0.18);
+      const idx = Math.round(displayFrame);
+      if (idx !== currentFrameIdx && frames[idx]) {
+        drawFrame(idx);
+      }
+      rafId = requestAnimationFrame(animateFrame);
+    } else {
+      displayFrame = targetFrame;
+      const idx = Math.round(displayFrame);
+      if (idx !== currentFrameIdx && frames[idx]) drawFrame(idx);
+    }
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(() => {
+        const containerTop = scrollContainer.offsetTop;
+        const containerH = scrollContainer.offsetHeight - window.innerHeight;
+        const scrolled = Math.max(0, window.scrollY - containerTop);
+        const progress = Math.min(1, scrolled / containerH);
+
+        targetFrame = Math.round(progress * (TOTAL_FRAMES - 1));
+
+        // Hide scroll hint after first scroll
+        if (window.scrollY > 50) {
+          scrollHint.classList.add('hidden');
+        } else {
+          scrollHint.classList.remove('hidden');
+        }
+
+        cancelAnimationFrame(rafId);
+        animateFrame();
+
+        ticking = false;
+      });
+    }
+  }, { passive: true });
+
+  // ─── NAV SCROLL ───
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 60) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  }, { passive: true });
+
+  // ─── SCROLL REVEAL ───
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+})();
+</script>
+</body>
+</html>
