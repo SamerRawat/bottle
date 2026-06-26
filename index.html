@@ -73,13 +73,290 @@
   }
   .nav-links a:hover { color: var(--gold); }
 
-  /* ─── HERO / SCROLL ANIMATION ─── */
-  #hero-scroll-container {
+  /* ─── HERO (STATIC — NO ANIMATION) ─── */
+  #hero {
+    min-height: 100vh;
+    padding-top: 80px; /* nav height */
+    display: flex;
+    align-items: center;
+    background: var(--black);
     position: relative;
-    height: 600vh; /* tall scroll space */
+    overflow: hidden;
   }
 
-  #hero-sticky {
+  /* subtle radial glow behind bottle */
+  #hero::after {
+    content: '';
+    position: absolute;
+    right: 8%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 560px;
+    height: 560px;
+    background: radial-gradient(ellipse at center, rgba(201,168,76,0.07) 0%, transparent 70%);
+    pointer-events: none;
+    border-radius: 50%;
+  }
+
+  .hero-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 60px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── LEFT COLUMN ── */
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .hero-brand-block {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 48px;
+  }
+
+  .hero-logo-mark {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+  }
+
+  .hero-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .hero-brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    color: var(--white);
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+  .hero-brand-sub {
+    font-size: 9px;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .hero-brand-divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(201,168,76,0.3);
+    margin-top: 6px;
+  }
+  .hero-brand-tagline {
+    font-size: 8px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-top: 5px;
+  }
+
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .hero-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(44px, 5.5vw, 80px);
+    font-weight: 600;
+    line-height: 1.0;
+    color: var(--white);
+    margin-bottom: 28px;
+  }
+  .hero-heading em {
+    font-style: italic;
+    color: var(--gold);
+    font-weight: 300;
+  }
+
+  .hero-para {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.9;
+    color: var(--text-dim);
+    max-width: 420px;
+    margin-bottom: 44px;
+  }
+
+  .hero-cta-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 56px;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--gold);
+    color: var(--black);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 16px 36px;
+    transition: background 0.3s, transform 0.2s;
+  }
+  .btn-primary:hover {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 15px 36px;
+    border: 1px solid rgba(201,168,76,0.35);
+    transition: border-color 0.3s, color 0.3s, transform 0.2s;
+  }
+  .btn-secondary:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: translateY(-1px);
+  }
+  .btn-arrow { font-size: 14px; }
+
+  .hero-stats-row {
+    display: flex;
+    gap: 0;
+    border-top: 1px solid rgba(201,168,76,0.12);
+    padding-top: 36px;
+  }
+  .hero-stat {
+    flex: 1;
+    padding-right: 28px;
+    border-right: 1px solid rgba(201,168,76,0.1);
+  }
+  .hero-stat:last-child { border-right: none; padding-right: 0; padding-left: 28px; }
+  .hero-stat:first-child { padding-left: 0; }
+  .hero-stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 5px;
+  }
+  .hero-stat-label {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  /* ── RIGHT COLUMN ── */
+  .hero-right-col {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+  }
+
+  .hero-bottle-wrap {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-bottle-wrap img {
+    width: 100%;
+    max-width: 420px;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 40px 80px rgba(0,0,0,0.8));
+  }
+
+  .hero-features {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding-top: 24px;
+    min-width: 200px;
+    max-width: 210px;
+  }
+
+  .hero-feature {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+  }
+  .hero-feature:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .hero-feature-icon {
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+  }
+  .hero-feature-icon svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--gold);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .hero-feature-title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--white);
+    line-height: 1.3;
+  }
+  .hero-feature-desc {
+    font-size: 11px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--text-dim);
+  }
+
+  /* ─── PRODUCT SHOWCASE (SCROLL ANIMATION) ─── */
+  #showcase-scroll-container {
+    position: relative;
+    height: 600vh;
+  }
+
+  #showcase-sticky {
     position: sticky;
     top: 0;
     height: 100vh;
@@ -89,93 +366,65 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background: var(--black);
   }
 
   #hero-canvas {
     position: absolute;
-    top: 80px; /* push below nav */
+    top: 80px;
     left: 0;
     right: 0;
     bottom: 0;
     width: 100%;
     height: calc(100% - 80px);
-    object-fit: cover;
   }
 
-  .hero-overlay {
+  .showcase-overlay {
     position: absolute;
     inset: 0;
     background: linear-gradient(
       to bottom,
       rgba(8,7,5,0.0) 0%,
-      rgba(8,7,5,0.0) 60%,
-      rgba(8,7,5,0.85) 100%
+      rgba(8,7,5,0.0) 55%,
+      rgba(8,7,5,0.9) 100%
     );
     pointer-events: none;
   }
 
-  .hero-top-overlay {
+  .showcase-top-overlay {
     position: absolute;
-    top: 80px; left: 0; right: 0;
-    height: 100px;
-    background: linear-gradient(to bottom, rgba(8,7,5,0.4) 0%, transparent 100%);
+    top: 0; left: 0; right: 0;
+    height: 180px;
+    background: linear-gradient(to bottom, rgba(8,7,5,0.7) 0%, transparent 100%);
     pointer-events: none;
   }
 
-  .hero-text {
+  .showcase-header {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 0 60px 80px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
+    top: 110px;
+    left: 0; right: 0;
+    text-align: center;
+    z-index: 2;
+    pointer-events: none;
   }
-
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(52px, 8vw, 110px);
-    font-weight: 300;
-    line-height: 0.9;
-    color: var(--white);
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-  .hero-title.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .hero-title em {
-    font-style: italic;
-    color: var(--gold);
-  }
-
-  .hero-right {
-    text-align: right;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
-  }
-  .hero-right.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .hero-tagline {
-    font-size: 11px;
-    letter-spacing: 0.3em;
+  .showcase-label {
+    font-size: 10px;
+    letter-spacing: 0.4em;
     text-transform: uppercase;
     color: var(--gold);
     margin-bottom: 12px;
+    display: block;
   }
-  .hero-desc {
-    font-size: 13px;
-    font-weight: 200;
-    line-height: 1.8;
-    color: var(--text-dim);
-    max-width: 280px;
-    margin-left: auto;
+  .showcase-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 56px);
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.1;
+  }
+  .showcase-title em {
+    font-style: italic;
+    color: var(--gold);
   }
 
   .scroll-hint {
@@ -189,6 +438,7 @@
     gap: 10px;
     opacity: 1;
     transition: opacity 0.4s;
+    z-index: 3;
   }
   .scroll-hint.hidden { opacity: 0; }
   .scroll-hint span {
@@ -587,22 +837,55 @@
   .reveal-delay-2 { transition-delay: 0.3s; }
   .reveal-delay-3 { transition-delay: 0.45s; }
 
-  /* ─── MOBILE CANVAS SAFETY ─── */
+  /* ─── MOBILE CANVAS SAFETY (showcase section) ─── */
   @media (max-width: 768px) {
     #hero-canvas {
-      /* Contain drawing area to visible region — JS handles actual render scaling */
       top: 80px;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      left: 0; right: 0; bottom: 0;
       width: 100%;
       height: calc(100% - 80px);
       max-width: 100vw;
       overflow: hidden;
     }
-    #hero-sticky {
-      overflow: hidden;
+    #showcase-sticky { overflow: hidden; }
+
+    /* Hero mobile layout */
+    .hero-inner {
+      grid-template-columns: 1fr;
+      padding: 40px 24px 60px;
+      gap: 48px;
     }
+    .hero-right-col {
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+    .hero-bottle-wrap img {
+      max-width: 280px;
+    }
+    .hero-features {
+      flex-direction: row;
+      flex-wrap: wrap;
+      max-width: 100%;
+      min-width: unset;
+      gap: 20px;
+      padding-top: 0;
+    }
+    .hero-feature {
+      flex: 1 1 calc(50% - 10px);
+      min-width: 140px;
+      border-bottom: none;
+      padding-bottom: 0;
+      border: 1px solid rgba(201,168,76,0.12);
+      padding: 16px;
+    }
+    .hero-right-col { order: 2; }
+    .hero-left { order: 1; }
+    .hero-heading { font-size: clamp(40px, 11vw, 60px); }
+    .hero-stats-row { gap: 0; }
+    .hero-stat { padding-left: 16px; padding-right: 16px; }
+    .hero-stat:first-child { padding-left: 0; }
+    .showcase-header { top: 96px; padding: 0 24px; }
   }
 
   @media (max-width: 900px) {
@@ -614,9 +897,6 @@
     .materials-grid { grid-template-columns: 1fr; }
     .footer-inner { grid-template-columns: 1fr 1fr; }
     section { padding: 80px 24px; }
-    .hero-text { padding: 0 24px 60px; flex-direction: column; gap: 24px; align-items: flex-start; }
-    .hero-right { text-align: left; }
-    .hero-right .hero-desc { margin-left: 0; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -646,21 +926,122 @@
   </ul>
 </nav>
 
-<!-- HERO SCROLL SECTION -->
-<div id="hero-scroll-container">
-  <div id="hero-sticky">
-    <canvas id="hero-canvas"></canvas>
-    <div class="hero-top-overlay"></div>
-    <div class="hero-overlay"></div>
+<!-- HERO (STATIC) -->
+<section id="hero">
+  <div class="hero-inner">
 
-    <div class="hero-text">
-      <div class="hero-title" id="hero-title">
-        Born to<br><em>Reign.</em>
+    <!-- LEFT: Brand + Copy + CTAs -->
+    <div class="hero-left">
+
+      <!-- Logo block -->
+      <div class="hero-brand-block">
+        <svg class="hero-logo-mark" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Shield -->
+          <path d="M26 4L6 12V28C6 38.5 15 47 26 50C37 47 46 38.5 46 28V12L26 4Z" stroke="#C9A84C" stroke-width="1.5" fill="rgba(201,168,76,0.05)"/>
+          <!-- Crown -->
+          <path d="M18 20L20 26H32L34 20L30 23L26 18L22 23Z" stroke="#C9A84C" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
+          <!-- T -->
+          <path d="M20 29H32M26 29V37" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round"/>
+          <!-- S-like letterform suggestion -->
+          <text x="26" y="38" text-anchor="middle" font-family="serif" font-size="0" fill="#C9A84C">S</text>
+        </svg>
+        <div class="hero-brand-text">
+          <div class="hero-brand-name">Tasha Alu Can</div>
+          <div class="hero-brand-sub">Manufacturing</div>
+          <div class="hero-brand-divider"></div>
+          <div class="hero-brand-tagline">Quality · Precision · Trust</div>
+        </div>
       </div>
-      <div class="hero-right" id="hero-right">
-        <div class="hero-tagline">TS Sovereign Collection</div>
-        <p class="hero-desc">Forged from aircraft-grade aluminium. Sealed with gold-plated precision. Four colours. One standard.</p>
+
+      <p class="hero-eyebrow">Premium Aluminium Bottles</p>
+
+      <h1 class="hero-heading">
+        Gifts That<br><em>Inspire</em><br>Every Day.
+      </h1>
+
+      <p class="hero-para">
+        Premium bottles for students, employees and corporate gifting. Custom branding, laser engraving, and bulk supply — built to last a lifetime.
+      </p>
+
+      <div class="hero-cta-row">
+        <a href="mailto:tashaalucan@gmail.com" class="btn-primary">
+          Get a Quote <span class="btn-arrow">→</span>
+        </a>
+        <a href="#collection" class="btn-secondary">
+          Explore Products <span class="btn-arrow">→</span>
+        </a>
       </div>
+
+      <div class="hero-stats-row">
+        <div class="hero-stat">
+          <div class="hero-stat-num">500<small style="font-size:18px">ml</small></div>
+          <div class="hero-stat-label">Capacity</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">24h</div>
+          <div class="hero-stat-label">Temperature</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">4</div>
+          <div class="hero-stat-label">Colours</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Bottle + Features -->
+    <div class="hero-right-col">
+      <div class="hero-bottle-wrap">
+        <img src="frames/f000.jpg" alt="TS Sovereign Bottle — Obsidian Black" />
+      </div>
+
+      <div class="hero-features">
+        <div class="hero-feature">
+          <div class="hero-feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M12 7V5a2 2 0 00-2-2H8a2 2 0 00-2 2v2M16 7V5a2 2 0 012-2h0a2 2 0 012 2v2"/></svg>
+          </div>
+          <div class="hero-feature-title">Perfect for Every Occasion</div>
+          <div class="hero-feature-desc">Students, employees, events &amp; promotions</div>
+        </div>
+
+        <div class="hero-feature">
+          <div class="hero-feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="hero-feature-title">Premium Quality</div>
+          <div class="hero-feature-desc">Durable, leak-proof &amp; built to last</div>
+        </div>
+
+        <div class="hero-feature">
+          <div class="hero-feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2v6M12 16v6M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M2 12h6M16 12h6"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <div class="hero-feature-title">Keeps Drinks Just Right</div>
+          <div class="hero-feature-desc">Retains temperature for hot &amp; cold drinks</div>
+        </div>
+
+        <div class="hero-feature">
+          <div class="hero-feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </div>
+          <div class="hero-feature-title">Make It Personal</div>
+          <div class="hero-feature-desc">Custom branding &amp; laser engraving available</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PRODUCT SHOWCASE (SCROLL ANIMATION) -->
+<div id="showcase-scroll-container">
+  <div id="showcase-sticky">
+    <canvas id="hero-canvas"></canvas>
+    <div class="showcase-top-overlay"></div>
+    <div class="showcase-overlay"></div>
+
+    <div class="showcase-header">
+      <span class="showcase-label">360° Product View</span>
+      <h2 class="showcase-title">Our <em>Signature</em> Bottle</h2>
     </div>
 
     <div class="scroll-hint" id="scroll-hint">
@@ -933,16 +1314,13 @@
     setTimeout(() => {
       loaderEl.classList.add('done');
       setTimeout(() => { loaderEl.style.display = 'none'; }, 700);
-      // Trigger hero text
-      document.getElementById('hero-title').classList.add('visible');
-      document.getElementById('hero-right').classList.add('visible');
     }, 300);
   }
 
   loadFrames();
 
-  // ─── SCROLL ANIMATION ───
-  const scrollContainer = document.getElementById('hero-scroll-container');
+  // ─── SCROLL ANIMATION (Product Showcase) ───
+  const scrollContainer = document.getElementById('showcase-scroll-container');
   const scrollHint = document.getElementById('scroll-hint');
   let ticking = false;
   let targetFrame = 0;
@@ -977,8 +1355,8 @@
 
         targetFrame = Math.round(progress * (TOTAL_FRAMES - 1));
 
-        // Hide scroll hint after first scroll
-        if (window.scrollY > 50) {
+        // Hide scroll hint once inside the showcase section
+        if (scrolled > 80) {
           scrollHint.classList.add('hidden');
         } else {
           scrollHint.classList.remove('hidden');
